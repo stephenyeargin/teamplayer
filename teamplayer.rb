@@ -5,6 +5,8 @@ Dotenv.load
 
 # Defaults
 Octokit.auto_paginate = true
+Octokit.default_media_type = "application/vnd.github.beta+json"
+request_headers = { accept: "application/vnd.github.beta+json" }
 
 # Client configuration
 client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
@@ -23,7 +25,7 @@ unless organization && user
   exit(1)
 end
 
-client.organization_repositories(organization).each do |repo|
-  permission = client.permission_level(repo.full_name, user).permission
+client.organization_repositories(organization, request_headers).each do |repo|
+  permission = client.permission_level(repo.full_name, user, request_headers).permission
   puts "#{permission}\t#{repo.full_name}"
 end
