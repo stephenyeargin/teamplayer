@@ -18,7 +18,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dotenv
+  dotenv (~> 2.2)
   octokit (~> 4.7)
 
 BUNDLED WITH
