@@ -1,5 +1,6 @@
 require 'dotenv'
 require 'octokit'
+require 'progress_bar'
 
 Dotenv.load
 
@@ -15,17 +16,50 @@ client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 organization = ARGV[0] 
 user = ARGV[1]
 
-def show_usage
+# Handle invalid input
+unless organization && user
   puts 'Usage:'
   puts '  ruby teamplayer.rb <org> <user>'
-end
-
-unless organization && user
-  show_usage
   exit(1)
 end
 
-client.organization_repositories(organization, request_headers).each do |repo|
+# Request data from the API
+repos = client.organization_repositories(organization, request_headers)
+
+# Progress bar based on count of repos
+bar = ProgressBar.new(repos.count)
+
+# Structure of results
+Results = Struct.new(:admin, :write, :read, :none)
+results = Results.new([], [], [], [])
+
+puts 'Scanning repositories for permissions ...'
+
+# Loop through the records and add to the return structure
+repos.each do |repo|
   permission = client.permission_level(repo.full_name, user, request_headers).permission
-  puts "#{permission}\t#{repo.full_name}"
+  results[permission] << repo
+  bar.increment!
+end
+
+# Return results
+puts ''
+puts 'ADMIN'
+results['admin'].each do |repo|
+  puts "- #{repo.full_name}"
+end
+puts ''
+puts 'WRITE'
+results['write'].each do |repo|
+  puts "- #{repo.full_name}"
+end
+puts ''
+puts 'READ'
+results['read'].each do |repo|
+  puts "- #{repo.full_name}"
+end
+puts ''
+puts 'NONE'
+results['none'].each do |repo|
+  puts "- #{repo.full_name}"
 end

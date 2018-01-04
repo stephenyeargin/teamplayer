@@ -6,9 +6,14 @@ GEM
     dotenv (2.2.1)
     faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
+    highline (1.7.10)
     multipart-post (2.0.0)
     octokit (4.7.0)
       sawyer (~> 0.8.0, >= 0.5.3)
+    options (2.3.2)
+    progress_bar (1.1.0)
+      highline (~> 1.6)
+      options (~> 2.3.0)
     public_suffix (3.0.1)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
@@ -20,6 +25,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv (~> 2.2)
   octokit (~> 4.7)
+  progress_bar (~> 1.1.0)
 
 BUNDLED WITH
    1.15.4
